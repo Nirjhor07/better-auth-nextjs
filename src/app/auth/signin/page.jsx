@@ -11,36 +11,29 @@ import {
 } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
 
-const SignUpPage = () => {
+const SignIpPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const newData = Object.fromEntries(formData.entries());
     console.log(newData);
-    const { data, error } = await authClient.signUp.email(newData);
+    const { data, error } = await authClient.signIn.email({
+      ...newData,
+      callbackURL: "/",
+    });
+
+    if (error) {
+      alert("dosent matched the credential");
+    } else {
+      alert("succesfully logged in");
+    }
   };
   return (
     <div className="w-10/12 mx-auto flex flex-col items-center justify-center py-10">
       <div>
-        <p className="text-4xl font-bold p-7">This is my sign up page</p>
+        <p className="text-4xl font-bold p-7">This is my sign In page</p>
       </div>
       <Form className="flex w-96 flex-col gap-4" onSubmit={onSubmit}>
-        {/* name */}
-        <TextField
-          isRequired
-          name="name"
-          validate={(value) => {
-            if (value.length < 3) {
-              return "Name must be at least 3 characters";
-            }
-            return null;
-          }}
-        >
-          <Label>Name</Label>
-          <Input placeholder="John Doe" />
-          <FieldError />
-        </TextField>
-
         {/* email */}
         <TextField
           isRequired
@@ -97,4 +90,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default SignIpPage;
